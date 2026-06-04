@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>agropecuarios</title>
+    <style>
+        /* Estilos generales y colores */
+        body{
+            background-color: #050505;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /*contenedor principal de la <calculadora>*/
+        .container{
+            background-color: #002200; /* Verde oscuro */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 255, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h1 {
+            color: #4CAF50; /* Acento verde brillante */
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+            
+        p {
+            color: #999;
+            margin-bottom: 25px;
+        }
+
+        /* Estilos de los formularios */
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #b3ffb3;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #004400;
+            border-radius: 5px;
+            background-color: #000000; /* Verde más oscuro */
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4CAF50; /* Verde brillante al enfocar */
+           
+        }
+
+        /* Boton de calcular */
+        button{
+            background-color: #1b5e20;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2e7d32;
+        }
+
+        /* caja donde aparece el resultado */
+        .resultado {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 15px;
+            background-color: #000000;
+            border-left: 5px solid #4CAF50;
+            display: none; /* oculto hasta que se haga el calculo */
+            border-radius: 3px;
+        }
+        </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>agropecuarios</h1>
+        <p>Calculadora de densidad de siembra</p>
+
+        <label for="hectareas">Numero de hectareas:</label>
+        <input type="number" id="hectareas" placeholder="ej: 1" step="0.1" min="0">
+
+        <label for="distanciaPlantas">distancia entre plantas (metros):</label>
+        <input type="number" id="distanciaPlantas" placeholder="ej: 3" step="0.01" min="0">
+
+        <label for="distanciaSurcos">Distancia entre surcos (metros):</label>
+        <input type="number" id="distanciaSurcos" placeholder="ej: 4" step="0.01" min="0">
+
+        <button onclick="calcularArboles()">Calcular Arboles</button>
+
+        <div id="resultado" class="resultado"></div>
+    </div>
+
+    <script>
+        function calcularArboles() {
+            // Obtener los valores ingresados por el usuario
+            const hectareas = parseFloat(document.getElementById('hectareas').value);
+            const distanciaPlantas = parseFloat(document.getElementById('distanciaPlantas').value);
+            const distanciaSurcos = parseFloat(document.getElementById('distanciaSurcos').value);
+            const divResultado = document.getElementById('resultado');
+
+            // Validar que los campos no esten vacios y sean mayores a 0
+            if (isNaN(hectareas) || isNaN(distanciaPlantas) || isNaN(distanciaSurcos) ||
+                hectareas <= 0 || distanciaPlantas <= 0 || distanciaSurcos <= 0) {
+                divResultado.style.display = 'block';
+                divResultado.style.backgroundColor = '#ffcccc';
+                divResultado.style.borderColor = '#ff0000';
+                divResultado.textContent = 'Por favor, ingresa valores válidos mayores a cero.';
+                return;
+            }
+
+            //logica matematica
+            // 1 hectarea = 10,000 metros cuadrados
+            const areaTotalM2 = hectareas * 10000;
+
+            // Area que ocupa un solo arbol
+            const areaPorArbolM2 = distanciaPlantas * distanciaSurcos;
+
+            // calculo final redondeado hacia abajo
+            const totalArboles = Math.floor(areaTotalM2 / areaPorArbolM2);
+
+            //Mostrar el resultado
+            divResultado.style.display = 'block';
+            divResultado.style.borderLeftColor = '#4CAF50';
+            divResultado.innerHTML = `En <strong>${hectareas}</strong> hectárea(s) caben exactamente <strong>${totalArboles.toLocaleString("es-Es")} arboles</strong>. <br><br>
+            <span style="font-size: 14px; color: #aaa;">(Densidad calculada en base a  ${distanciaPlantas}m x ${distanciaSurcos}m)</span>`;
+        }
+    </script>
+</body>
+</html>
